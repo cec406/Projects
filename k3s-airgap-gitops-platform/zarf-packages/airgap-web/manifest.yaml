@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zarf-demo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airgap-web
+  namespace: zarf-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: airgap-web
+  template:
+    metadata:
+      labels:
+        app: airgap-web
+    spec:
+      containers:
+        - name: nginx
+          image: docker.io/library/nginx:1.27-alpine
+          ports:
+            - containerPort: 80

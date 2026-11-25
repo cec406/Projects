@@ -1,0 +1,17 @@
+kind: ZarfPackageConfig
+metadata:
+  name: edge-airgap-demo
+  description: Air-gapped web workload packaged with embedded SBOM for disconnected K3s delivery
+  version: "0.1.0"
+  architecture: amd64
+
+components:
+  - name: airgap-web
+    required: true
+    manifests:
+      - name: airgap-web-manifest
+        namespace: zarf-demo
+        files:
+          - manifest.yaml
+    images:
+      - docker.io/library/nginx:1.27-alpine

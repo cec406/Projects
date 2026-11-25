@@ -1,0 +1,5 @@
+*.tar.zst
+*.env
+*secret*.yaml
+.DS_Store
+__pycache__/
