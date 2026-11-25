@@ -1,0 +1,12 @@
+services:
+  ollama:
+    image: ${OLLAMA_IMAGE:?Set OLLAMA_IMAGE to a staged Ollama tag or digest}
+    pull_policy: never
+    gpus: all
+    ports:
+      - '127.0.0.1:11434:11434'
+    volumes:
+      - models:/root/.ollama
+    restart: unless-stopped
+volumes:
+  models:

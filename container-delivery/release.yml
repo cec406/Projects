@@ -1,0 +1,18 @@
+name: Build and scan sample
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t portfolio-release:${GITHUB_SHA} container-delivery
+      - uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: portfolio-release:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+      - run: |
+          docker run -d --name release -p 127.0.0.1:8080:8080 portfolio-release:${GITHUB_SHA}
+          curl -fsS --retry 5 --retry-connrefused http://127.0.0.1:8080/ | grep -F release-ok

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "site-local/qwen3:4b",
+  "providers": {
+    "site-local": {
+      "name": "Local Ollama",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {"baseURL": "http://127.0.0.1:11434/v1"},
+      "models": {"qwen3:4b": {"name": "Qwen3 4B (local)"}}
+    }
+  },
+  "policies": [
+    {"action": "provider.use", "resource": "*", "effect": "deny"},
+    {"action": "provider.use", "resource": "site-local", "effect": "allow"}
+  ],
+  "default_agent": "handoff",
+  "agents": {
+    "handoff": {
+      "description": "Summarize synthetic operations notes for a shift handoff",
+      "mode": "primary",
+      "system": "Use only facts in the supplied notes. Return a brief status, open issues, and next checks. Mark missing facts as unknown. Do not execute commands or modify files.",
+      "permissions": [{"action": "*", "resource": "*", "effect": "deny"}]
+    },
+    "manual-guide": {
+      "description": "Answer maintenance questions from a bundled synthetic field manual",
+      "mode": "primary",
+      "system": "{file:./manual-guide.md}",
+      "permissions": [{"action": "*", "resource": "*", "effect": "deny"}]
+    }
+  }
+}

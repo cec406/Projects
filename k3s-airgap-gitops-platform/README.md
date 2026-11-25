@@ -1,70 +1,42 @@
-# Air-Gapped & Tactical-Edge Kubernetes GitOps Platform (K3s + Zarf + Flux CD)
+# Disconnected Kubernetes delivery | K3s, Zarf and Flux CD
 
-A declarative, security-hardened Kubernetes platform engineered to model **Disconnected, Intermittent, and Limited-Bandwidth (DDIL)** tactical-edge operations. Built on **K3s**, packaged for air-gapped delivery with **Zarf**, reconciled declaratively via **Flux CD** against a self-hosted **Gitea** instance, and hardened with zero-trust **NetworkPolicies**, continuous **Trivy** vulnerability scanning, and automated **Kured** node lifecycle management.
+This lab shows how to deliver an application to a remote commercial site that cannot pull from public registries. It separates the **offline workload demo** from the **GitOps platform example** so operators know which components still need mirrors.
 
-## Architecture Overview
+## Run the offline workload demo
 
-```text
-+-----------------------------------------------------------------------------------+
-|                        Disconnected / Tactical-Edge Node (K3s)                    |
-|                                                                                   |
-|  [ Zarf Air-Gap Bundle (.tar.zst + SBOM) ]                                        |
-|          |                                                                        |
-|          v                                                                        |
-|  +---------------------------+      Mutating Webhook      +--------------------+  |
-|  |   Zarf Local OCI Registry | <------------------------> |     Zarf Agent     |  |
-|  +---------------------------+      Rewrites Image URLs   +--------------------+  |
-|                                                                                   |
-|  +---------------------------+      GitOps Reconcile      +--------------------+  |
-|  |   Self-Hosted Gitea       | <------------------------> |   Flux CD Engine   |  |
-|  |  (Isolated PostgreSQL DB) |                            +--------------------+  |
-|  +---------------------------+                                      |             |
-|          ^                                                          v             |
-|          | NetworkPolicy (TCP/5432)            +-------------------------------+  |
-|  +---------------------------+                 |   Hardened Edge Workloads     |  |
-|  |  Aqua Trivy Operator      |                 | - Traefik Ingress             |  |
-|  |  (Continuous CVE / SBOM)  |                 | - Prometheus & Grafana        |  |
-|  +---------------------------+                 | - Uptime Kuma                 |  |
-|                                                | - Kured (OS Reboot Lifecycle) |  |
-|                                                +-------------------------------+  |
-+-----------------------------------------------------------------------------------+
-```
+Use a disposable amd64 K3s cluster and a Zarf CLI and init package from the same release. Ensure the Kubernetes context points at the lab cluster before running the deployment commands.
 
-## Key Capabilities & Stack
+1. On a connected build machine, from this project directory:
 
-- **Air-Gap Application Delivery (Zarf):** Bundles Kubernetes manifests, container images, and Software Bills of Materials (SBOMs) into portable `.tar.zst` archives (`zarf-packages/airgap-web/zarf.yaml`). Uses Zarf's mutating admission webhook (`zarf-agent`) to dynamically rewrite external registry references to an in-cluster OCI registry.
-- **Declarative GitOps (Flux CD + Self-Hosted Gitea):** Eliminates external SaaS dependencies by hosting Git repositories locally in Gitea backed by persistent PostgreSQL storage, with Flux CD continuously reconciling cluster state (`Kustomization` and `HelmRelease` CRDs).
-- **Zero-Trust Micro-Segmentation (`NetworkPolicy`):** Enforces namespace-level ingress isolation (`allow-gitea-only`) so stateful database workloads only accept traffic from authorized application namespaces.
-- **Continuous Vulnerability & Compliance Telemetry (Aqua Trivy Operator):** Continuously scans running workloads for CVEs, exposed secrets, and misconfigurations to support Continuous ATO (cATO) workflows.
-- **Observability & Automated Node Lifecycle:** Full-stack metrics and alerting via `kube-prometheus-stack` (Prometheus, Grafana, Alertmanager), endpoint health checks via Uptime Kuma, and automated maintenance-window OS patching reboots via **Kured**.
-
-## Repository Structure
-
-```text
-├── clusters/edge-node/          # Flux CD Kustomizations and HelmReleases (Kured, Trivy, Monitoring)
-├── zarf-packages/airgap-web/    # Zarf package definition (zarf.yaml) and air-gapped workload manifests
-├── infrastructure/
-│   ├── postgres/                # Stateful PostgreSQL deployment, PVC, and zero-trust NetworkPolicy
-│   ├── gitea/                   # Self-hosted Gitea Git server and Traefik Ingress
-│   ├── monitoring/              # kube-prometheus-stack HelmRelease and alert rules
-│   └── uptime-kuma/             # Service availability and internal DNS health monitoring
-└── README.md
-```
-
-## Quickstart: Air-Gap Packaging & Deployment
-
-1. **Package the workload on a connected build host:**
-   ```bash
+   ```sh
    cd zarf-packages/airgap-web
    zarf package create --confirm
    ```
-2. **Initialize Zarf and deploy on the disconnected cluster:**
-   ```bash
+
+2. Transfer the generated package and the matching amd64 Zarf init package to the offline operator machine through your approved transfer process. From the directory containing both archives:
+
+   ```sh
    zarf init --confirm
-   zarf package deploy zarf-package-edge-airgap-demo-amd64-0.1.0.tar.zst --confirm
+   zarf package deploy ./zarf-package-edge-airgap-demo-amd64-0.1.0.tar.zst --confirm
    ```
-3. **Verify mutating webhook image rewriting:**
-   ```bash
-   kubectl get pod -n zarf-demo -o jsonpath='{.items[0].spec.containers[0].image}{"
-"}'
+
+3. Check that the pod is ready and inspect the running pod's image reference:
+
+   ```sh
+   kubectl -n zarf-demo rollout status deployment/airgap-web --timeout=120s
+   kubectl -n zarf-demo get pods -l app=airgap-web -o jsonpath='{range .items[*]}{.spec.containers[0].image}{"\n"}{end}'
    ```
+
+   The pod should use the Zarf registry rather than pulling the original image from Docker Hub.
+
+## Review the GitOps platform
+
+- [`clusters/edge-node/`](clusters/edge-node/) contains a Flux reconciliation example and optional Helm releases for monitoring, vulnerability scanning and reboot scheduling. Review Kured's maintenance window before enabling it.
+- [`infrastructure/`](infrastructure/) contains Gitea, PostgreSQL, Uptime Kuma and an ingress policy that allows Gitea pods to reach PostgreSQL. Policy enforcement requires a compatible network plugin.
+- [`zarf-packages/airgap-web/`](zarf-packages/airgap-web/) packages only the sample web workload, not the entire platform.
+
+For the GitOps example, bootstrap Flux against a reachable Git repository first. The sample `edge-infrastructure` resource assumes the `flux-system` GitRepository points to the **parent portfolio repository**. If you publish this folder as a standalone repository, change `spec.path` to `./infrastructure` and update the bootstrap path accordingly. Do not point Flux at the example Gitea service until that service is available and has been seeded.
+
+Before reconciling infrastructure, ensure the `postgres` and `gitea` namespaces exist and provision `postgres-credentials` in `postgres` and `gitea-db-secret` in `gitea`. Both need a `password` key containing the same value; provision it outside Git. PVCs require a default StorageClass or an explicitly configured one. The sample ingress names require matching local DNS and an ingress controller; configure TLS and access controls before exposing them beyond a lab.
+
+The optional Helm releases reference public chart repositories. For a fully disconnected platform, mirror the charts, component images and Trivy vulnerability databases, then point configuration at the mirrors. This repository does not automate those steps. No ML workload is included.
