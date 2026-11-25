@@ -2,6 +2,8 @@
 
 A commercial reference sample of the release pattern I used for containerized tooling: build an identifiable artifact, scan it, and verify it starts before promoting it to a customer host.
 
+**What to review:** the [Dockerfile](Dockerfile) runs a small HTTP fixture as a non-root user; the [workflow template](release.yml) tags its image with the commit SHA, scans it with Trivy, and checks the HTTP response. The fixture is synthetic and the workflow is not enabled by default.
+
 ## Try it locally
 
 From this directory, with Docker running:

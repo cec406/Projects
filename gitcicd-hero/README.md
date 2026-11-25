@@ -4,6 +4,8 @@ A browser-based workshop for onboarding developers and operators to Git and CI/C
 
 **[Try GitCI/CD Hero live](https://grizzlyse.com/gitcicd/)** — no setup required.
 
+The course has 8 tracks and 46 chapters, including simulated Git missions, CI missions, and quizzes. The browser engines let learners practice commands and workflow concepts in a controlled environment rather than using a real Git executable or CI runner.
+
 ## Try it locally
 
 Open `index.html` from this folder in a browser. Start with a Git mission, then run a sample pipeline and inspect its job logs. No account or installation is required for the app. Git commands and pipeline steps run in a simulation, not on the host.

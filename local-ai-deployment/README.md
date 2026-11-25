@@ -1,32 +1,50 @@
 # Local AI deployment for low-bandwidth sites
 
-I built and ran GPU-accelerated local LLMs and job-specific agents inside an Arch Linux WSL environment. I bundled the distribution with Ollama, model files, and custom tools so I could transfer the environment to another Windows device instead of rebuilding it or downloading models at each site. I used different models based on available GPU VRAM, working with models up to 24B parameters across Qwen, DeepSeek, Mistral, Dolphin, and Gemma families. I also worked with containerized inference services and OpenCode configured for either local models or OpenRouter.
+**Portable local inference, task-specific agents, and an explicit cloud boundary.** This project shows how an AI workspace can be staged for sites where reliable broadband cannot be assumed.
 
-This folder is a commercial reference implementation, not the original distribution or a copy of private tools. It documents two deployment paths: [the portable Arch WSL bundle](wsl-portability.md) and the container lab below. The goal is the same for both: a technician can use an assistant after the WAN link drops, and the operator decides when cloud inference is allowed.
+## Experience and scope
+
+I built and ran GPU-accelerated local LLMs and job-specific agents in an Arch Linux WSL environment. The agents could work from locally staged instructions, manuals, and reference material without relying on online search or a hosted model. I bundled Ollama, model files, and custom tools with the distribution so it could be transferred to another compatible Windows device rather than rebuilt or downloaded at each site. I selected models for available GPU VRAM and worked with models up to 24B parameters across the Qwen, DeepSeek, Mistral, Dolphin, and Gemma families. I also worked with containerized inference services and OpenCode configured for local models or OpenRouter.
+
+**This repository is a synthetic reference implementation, not the original WSL distribution or private tools.** The [WSL runbook](wsl-portability.md) describes a clean reproduction of the portability workflow; the container lab below illustrates local inference and agent configuration. The files demonstrate the design, not a measured performance result or proof of a particular hardware deployment.
+
+## Explore the evidence
+
+| Area | What to review |
+| --- | --- |
+| Portable workspace | [WSL portability runbook](wsl-portability.md): staging, export/import, and offline acceptance checks. |
+| Local inference | [Compose service](compose.yaml) binds Ollama to loopback and uses a persistent model volume; [`smoke.py`](smoke.py) checks the local catalog and requests a response. |
+| Task-specific agents | [Local profile](config/local.json) defines a synthetic shift-handoff agent and a manual-answering agent with tool permissions denied; [the manual](config/manual-guide.md) is included as prompt context. |
+| Cloud opt-in | [Connected profile](config/connected.json) selects an OpenRouter model in a separate workspace. It is not an automatic fallback. |
+
+The example manual is loaded from disk into the agent's prompt; it does not use a vector database or retrieval service. Cloud requests may send prompts and context off-site, so use approved data only. The local profile restricts provider use at project scope, but an offline guarantee requires WAN isolation outside OpenCode.
+
+## Deployment paths
 
 ```text
-Offline:    OpenCode → local model API → Ollama container → GPU in Linux guest
-Remote:     Authorized user → Tailscale → on-site agents and GPU-backed inference
-Cloud:      OpenCode → OpenRouter (separate workspace, explicitly selected)
+Local:   OpenCode → local Ollama API → GPU-backed inference (WSL or container host)
+Remote:  Authorized user → Tailscale → on-site agents and GPU-backed inference
+Cloud:   OpenCode → OpenRouter (separate workspace, explicitly selected)
 ```
 
-I used OpenCode with local LLMs and built separate agents for different jobs. Each could work from the instructions, manuals, and reference material staged with its environment, rather than depending on an online search or hosted model.
+For the portable Windows workflow, start with the [WSL runbook](wsl-portability.md). For the container reference, follow the steps below. The remote-access section describes the Tailscale pattern; the Compose sample does not configure it.
 
-This repo illustrates that pattern with two agents: `handoff` turns synthetic notes into a shift summary, and `manual-guide` answers questions from a bundled local manual. The offline profile selects the local model, allows only the local provider at project scope, and denies agent tool use. The manual is loaded into the second agent's prompt from disk; this small example does not need a vector database or retrieval service. The connected profile is opt-in, not an automatic fallback. Cloud requests may send the prompt and context off-site. Use approved data only; for an offline guarantee, enforce WAN isolation outside OpenCode rather than relying on project settings.
-
-## Stage once, run without broadband
+## Container lab: stage once, run without broadband
 
 1. **Prepare the runtime.** On bare metal, verify the GPU with `nvidia-smi`. In a Proxmox lab, enable IOMMU and assign the GPU to a Linux guest through PCI passthrough; verify it with `nvidia-smi` inside the guest first. The sample assumes an NVIDIA GPU, working guest driver, NVIDIA Container Toolkit, and Docker Compose 2.30+ (`gpus: all`). Passthrough is a hypervisor setup step, not a Compose feature.
-2. **Stage artifacts while connected.** Set `OLLAMA_IMAGE` to an exact, locally available Ollama tag or digest. Prepare OpenCode and any provider runtime dependencies on the actual target or an equivalent staging machine. On a connected target, start Ollama and download the model:
+2. **Stage artifacts while connected.** Set `OLLAMA_IMAGE` to an exact, locally available Ollama tag or digest. Prepare OpenCode and any provider runtime dependencies on the actual target or an equivalent staging machine. From this directory on a connected target, start Ollama and download the model:
 
    ```sh
+   export OLLAMA_IMAGE='ollama/ollama:<staged-tag>' # replace with your local tag or digest
    docker compose up -d
    docker compose exec ollama ollama pull qwen3:4b
    ```
 
+   Keep `OLLAMA_IMAGE` set for subsequent Compose commands.
+
    For a target that never connects, transfer the container image (`docker save` / `docker load`) and a backup of the populated Ollama volume, including manifests and blobs. Restore the volume before starting Compose. Record image and artifact checksums, model license and platform architecture in the handoff. Docker is configured not to pull an absent image.
 3. **Validate with WAN access blocked.** Run `docker compose up -d`, then `python smoke.py` using Python 3 on the container host. This checks that `qwen3:4b` is staged and returns text over the loopback API. After the request, run `docker compose exec ollama ollama ps` promptly and inspect `PROCESSOR` for GPU residency or CPU offload. The HTTP smoke test alone does not prove GPU acceleration.
-4. **Run the agent.** Copy [`config/local.json`](config/local.json) to `opencode.json` in a clean demo workspace on the same host. Open OpenCode V2 from it and give the `handoff` agent synthetic notes such as: “Bay 2 inspection complete. Replacement filter pending. ETA unknown.” Verify it preserves the facts and reports unknowns instead of guessing. For the second agent, copy [`config/manual-guide.md`](config/manual-guide.md) next to the workspace's `opencode.json`, select `manual-guide`, and ask: “What should I do if the Bay 2 replacement filter is out of stock?” Expect `Waiting for parts`, no ETA until purchasing confirms it, and a citation to `M-01`. Ask for a procedure not in the manual to check that the agent reports the gap instead of inventing instructions. Recheck after a container restart and with WAN access still blocked.
+4. **Run the agents.** Copy [`config/local.json`](config/local.json) to `opencode.json` in a clean demo workspace on the same host, and copy [`config/manual-guide.md`](config/manual-guide.md) next to it. Open OpenCode V2 from that workspace and give the `handoff` agent synthetic notes such as: “Bay 2 inspection complete. Replacement filter pending. ETA unknown.” Verify it preserves the facts and reports unknowns instead of guessing. Select `manual-guide` and ask: “What should I do if the Bay 2 replacement filter is out of stock?” Expect `Waiting for parts`, no ETA until purchasing confirms it, and a citation to `M-01`. Ask for a procedure not in the manual to check that the agent reports the gap instead of inventing instructions. Recheck after a container restart and with WAN access still blocked.
 
 ## Remote access to on-site AI over Tailscale
 

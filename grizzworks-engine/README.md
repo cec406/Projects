@@ -6,6 +6,12 @@ This folder contains the actual shared GrizzWorks engine, its browser storage ad
 
 **[Open the live GrizzWorks demo](https://grizzlyse.com/dashboard/)** to see the full interface. Use only sample data in the public demo.
 
+## What to look at
+
+- **Business rules:** invoice posting, partial and full payments, purchasing, inventory movements, and transaction reversals.
+- **Consistency checks:** the tests exercise balanced journal entries, locked posted documents, payment guardrails, and repeat-safe posting.
+- **Shared behavior:** the browser storage adapter uses the same engine as the server-side application; this extract includes the adapter and business logic, not the server.
+
 ## Run the tests
 
 With Node.js 18+ installed, run `npm test` from this folder. No dependency install or network access is needed.

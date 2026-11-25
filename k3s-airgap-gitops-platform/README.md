@@ -2,6 +2,14 @@
 
 This lab shows how to deliver an application to a remote commercial site that cannot pull from public registries. It separates the **offline workload demo** from the **GitOps platform example** so operators know which components still need mirrors.
 
+**Start here:**
+
+- [Offline workload](zarf-packages/airgap-web/zarf.yaml) — package a sample web application and its image for a disconnected K3s cluster.
+- [Flux reconciliation](clusters/edge-node/infrastructure-kustomization.yaml) — inspect how the example GitOps platform points at infrastructure manifests.
+- [Platform manifests](infrastructure/) — review sample services and network policy; these are not included in the offline workload package.
+
+This is a reference lab, not a claim that the entire platform is already packaged or deployed in a disconnected environment.
+
 ## Run the offline workload demo
 
 Use a disposable amd64 K3s cluster and a Zarf CLI and init package from the same release. Ensure the Kubernetes context points at the lab cluster before running the deployment commands.

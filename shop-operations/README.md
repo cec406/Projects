@@ -2,6 +2,8 @@
 
 GrizzWorks was built for shops that need to manage jobs, quotes, inventory, and billing on their own hardware. This standalone reference sample isolates one design decision: post an invoice and its payment as balanced entries in a local database that needs no internet connection.
 
+**What to review:** [`demo.py`](demo.py) uses SQLite, integer cents, paired debit/credit entries, and fixed event IDs so re-running the same sample against the same database does not duplicate it. For the actual shared GrizzWorks business logic and tests, see the [engine extract](../grizzworks-engine/).
+
 ## Try it
 
 From this directory, run `python demo.py` with Python 3. Expect cash of 12500 cents, receivables of 0, and revenue of -12500 (credits use negative signs). To see repeatable imports, run `python demo.py --db demo.sqlite` twice; the synthetic event IDs prevent duplicate postings.

@@ -1,0 +1,31 @@
+# Illustrative local-only demo, not the workplace configuration.
+services:
+  gitea:
+    image: ${GITEA_IMAGE:?Set GITEA_IMAGE to a staged, versioned rootful Gitea image}
+    pull_policy: never
+    restart: unless-stopped
+    environment:
+      USER_UID: '1000'
+      USER_GID: '1000'
+      GITEA__database__DB_TYPE: sqlite3
+      GITEA__server__ROOT_URL: http://127.0.0.1:3000/
+      GITEA__server__DISABLE_SSH: 'true'
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      - gitea-data:/data
+
+  stirling-pdf:
+    image: ${STIRLING_PDF_IMAGE:?Set STIRLING_PDF_IMAGE to a staged, versioned Stirling PDF image}
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:8080:8080'
+    volumes:
+      - stirling-config:/configs
+      - stirling-storage:/storage
+
+volumes:
+  gitea-data:
+  stirling-config:
+  stirling-storage:
