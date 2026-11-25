@@ -1,6 +1,6 @@
 # Local AI deployment for low-bandwidth sites
 
-I built and ran GPU-accelerated local LLMs and job-specific agents inside an Arch Linux WSL environment. I bundled the distribution with Ollama, model files, and custom tools so I could transfer the environment to another Windows device instead of rebuilding it or downloading models at each site. I also worked with containerized inference services and OpenCode configured for either local models or OpenRouter.
+I built and ran GPU-accelerated local LLMs and job-specific agents inside an Arch Linux WSL environment. I bundled the distribution with Ollama, model files, and custom tools so I could transfer the environment to another Windows device instead of rebuilding it or downloading models at each site. I used different models based on available GPU VRAM, working with models up to 24B parameters across Qwen, DeepSeek, Mistral, Dolphin, and Gemma families. I also worked with containerized inference services and OpenCode configured for either local models or OpenRouter.
 
 This folder is a commercial reference implementation, not the original distribution or a copy of private tools. It documents two deployment paths: [the portable Arch WSL bundle](wsl-portability.md) and the container lab below. The goal is the same for both: a technician can use an assistant after the WAN link drops, and the operator decides when cloud inference is allowed.
 
