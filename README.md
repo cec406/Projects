@@ -56,5 +56,13 @@ A lab for delivering a sample workload without pulling from a public registry at
 - [CODEWATCH](https://grizzlyse.com/range/machine.html?m=cybercrime) — cybercrime investigation and incident reporting simulation.
 - [SpanishPod](https://grizzlyse.com/spanish) and [RussianPod](https://grizzlyse.com/russian) — language practice with graded lessons and games; SpanishPod uses Latin-American Spanish.
 - [Station Demokratiya](https://grizzlyse.com/stationdemokratiya) — Russian and Spanish typing-defense game.
+- [AFT Forge](https://grizzlyse.com/aft-forge/) — local-first fitness planning app built with React and TypeScript.
+
+## Other repositories
+
+- [Applications](https://github.com/cec406/applications) — shop operations and business applications.
+- [grizzlyse](https://github.com/cec406/grizzlyse) — the live website, training apps, games, and language tools.
+- [Cyber](https://github.com/cec406/Cyber) — security utilities and educational examples.
+- [Python applications](https://github.com/cec406/Python-applications) — Python utilities and games.
 
 Project READMEs distinguish original code and workplace experience from reference implementations and synthetic examples.
