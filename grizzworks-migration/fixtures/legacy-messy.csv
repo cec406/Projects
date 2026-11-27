@@ -1,0 +1,6 @@
+legacy_id,customer,job,title,status,priority,due,est_hours
+L-101, north fork fabrication ,November service,"Inspect hoses, clamps, and fittings",active,high,2026-12-02,2.25
+L-102,River Bend Supply,November service,Replace seals,parts hold,normal,12/03/26,1.50
+L-103,Unknown customer,November service,Check pump alignment,booked,normal,2026-12-04,3.25
+L-104,North Fork Fabrication,November service,Confirm parts received,closed,low,2026-12-01,0.50
+l-104,North Fork Fabrication,November service,Conflicting duplicate,open,low,2026-12-01,0.50

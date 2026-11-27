@@ -1,16 +1,11 @@
-# Caleb E. Clark
+# Caleb Clark | Forward-deployed systems engineer
 
-**Forward-deployed engineering · Infrastructure · Local AI · Software**
+I build software around how operators work and deploy it on the hardware and networks they already have. I’m interested in customer-facing engineering roles where I can own a system through rollout and handoff.
 
-I build and deploy software for teams working with existing hardware, limited connectivity, and a small crew to operate it.
+**[Engineering portfolio](https://grizzlyse.com/portfolio/) · [Project evidence](https://github.com/cec406/Projects) · [LinkedIn](https://www.linkedin.com/in/caleb-clark-4a638b28b/) · [Email me](mailto:info@grizzlyse.com?subject=Engineering%20role%20for%20Caleb%20Clark)**
 
-[Engineering portfolio](https://github.com/cec406/Projects) · [LinkedIn](https://www.linkedin.com/in/caleb-clark-4a638b28b/) · [Engineering lab](https://grizzlyse.com/lab) · [Live projects](https://grizzlyse.com/projects/) · [Training range](https://grizzlyse.com/range/)
+- **Product and implementation:** [Try GrizzWorks](https://grizzlyse.com/dashboard/?demo=1#/workorders), inspect the [posting engine and tests](https://github.com/cec406/Projects/tree/main/grizzworks-engine), or see how I validated a [work-order migration](https://github.com/cec406/Projects/tree/main/grizzworks-migration) in a disposable app instance.
+- **Deploy and integrate:** See the [workplace server and VPN deployment](https://github.com/cec406/Projects/tree/main/infrastructure-project), [disconnected K3s workload lab](https://github.com/cec406/Projects/tree/main/k3s-airgap-gitops-platform), and [Python release readiness kit](https://github.com/cec406/Projects/tree/main/edge-readiness).
+- **Local AI and operator enablement:** Read the [portable GPU inference runbook](https://github.com/cec406/Projects/tree/main/local-ai-deployment) or try [Grizzly Range](https://grizzlyse.com/range/), a browser workspace that tracks progress across five independent training apps.
 
-## Selected work
-
-- **[Workplace infrastructure](https://github.com/cec406/Projects/tree/main/infrastructure-project):** Built an Ubuntu Server environment for a TAK server supporting ATAK/WinTAK and self-hosted services. Used Docker Compose to start Dockge, managed services through Dockge, and used Tailscale and MagicDNS for remote access.
-- **[Local AI](https://github.com/cec406/Projects/tree/main/local-ai-deployment):** Built a portable Arch WSL environment with GPU-accelerated local models and job-specific agents. Selected models for available GPU VRAM, working with Qwen, DeepSeek, Mistral, Dolphin, and Gemma models up to 24B parameters.
-- **[GrizzWorks and Shop Ops](https://github.com/cec406/applications):** Local-first business and shop applications. [Try the GrizzWorks browser demo](https://grizzlyse.com/dashboard/) with sample data.
-- **[Interactive training and applications](https://github.com/cec406/grizzlyse):** Browser-based Git/CI simulation, security training, games, and language apps. [Try GitCI/CD Hero](https://grizzlyse.com/gitcicd/), the [training range](https://grizzlyse.com/range/), or [AFT Forge](https://grizzlyse.com/aft-forge/), a local-first React/TypeScript fitness planner.
-- **[Security utilities](https://github.com/cec406/Cyber):** Python tools for authorized security assessment and education.
-- **[Python applications and games](https://github.com/cec406/Python-applications):** Small command-line, Tkinter, and Pygame projects.
+For more demos, including Python utilities, games, and learning apps, see the [project catalog](https://grizzlyse.com/projects/).

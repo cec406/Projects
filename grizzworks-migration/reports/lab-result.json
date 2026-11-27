@@ -1,0 +1,22 @@
+{
+  "scope": "Synthetic fixture in disposable GrizzWorks server; API verification, not customer data",
+  "baseline_workorders": 1,
+  "restored_workorders": 5,
+  "imported": {
+    "records": 4,
+    "estimated_hours": "7.50"
+  },
+  "replay_new_workorders": 0,
+  "preserved_across_server_restart": true,
+  "example_work_order": {
+    "id": "wo-migration-l-101",
+    "title": "Inspect hoses, clamps, and fittings",
+    "status": "In Progress",
+    "priority": "High",
+    "jobId": "job-lab-north",
+    "type": "Corrective",
+    "due": "2026-12-02",
+    "estHours": 2.25,
+    "description": "Imported legacy work order L-101."
+  }
+}

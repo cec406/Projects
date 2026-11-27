@@ -1,68 +1,47 @@
-# Caleb E. Clark
+# Caleb E. Clark | Forward-deployed engineering
 
-**Forward-deployed engineering · Infrastructure · Local AI · Software · Training**
+I build software around how operators work and deploy it on the infrastructure they have. My work spans shop operations software, workplace systems integration, disconnected deployment, and training that helps operators use what I build.
 
-I build and deploy software for teams working with existing hardware, limited connectivity, and a small crew to operate it.
+**[Live engineering portfolio](https://grizzlyse.com/portfolio/) · [Project catalog](https://grizzlyse.com/projects/) · [Engineering Lab](https://grizzlyse.com/lab.html) · [LinkedIn](https://www.linkedin.com/in/caleb-clark-4a638b28b/)**
 
-[LinkedIn](https://www.linkedin.com/in/caleb-clark-4a638b28b/) · [GitHub](https://github.com/cec406) · [Explore the live lab](https://grizzlyse.com/lab) · [Browse all projects](https://grizzlyse.com/projects/)
+## Start here
 
-## Selected work
+**Reviewing for a forward-deployed role?** Move a sample work order in GrizzWorks. Then read the workplace capability map to see how I integrated services within an existing network, or open the K3s validation notes if your team ships to disconnected sites.
 
-### [Workplace infrastructure](infrastructure-project/) · Ubuntu Server, containers, networking
+| What to evaluate | Work sample | What to inspect |
+| --- | --- | --- |
+| Operator-facing software | **GrizzWorks** · Browser demo + self-hosted app. A work order flows through jobs, stock, quotes, and invoicing. The shared JavaScript engine posts balanced entries and corrects posted invoices with reversals. | [Try the seeded work-order board](https://grizzlyse.com/dashboard/?demo=1#/workorders) · [Wall display](https://grizzlyse.com/dashboard/display.html) · [Engine](grizzworks-engine/shared/erp.js) · [Tests](grizzworks-engine/tests/erp.test.js) · [Full Node app](https://github.com/cec406/applications/tree/main/dashboard) |
+| Workplace integration and VPN | **Private field services** · Built an Ubuntu Server environment for TAK (ATAK/WinTAK) and self-hosted tools. Docker Compose bootstrapped Dockge; the site used Starlink, a Cisco router, firewall services, NAS, and Tailscale with MagicDNS. Security tooling included Trivy, CrowdSec, Wazuh, and Nessus. | [Capability map](infrastructure-project/architecture.md) · [Sample operations checks](infrastructure-project/operations.md) · [Independent VPN field notes](https://grizzlyse.com/lab.html#vpn) |
+| Kubernetes under connectivity constraints | **Disconnected K3s delivery** · I deployed the sample web workload in a disconnected lab. Its Zarf package bundles the image and manifests. The separate Flux/Kustomize example shows persistent services and network policy; it still needs mirrors to run fully offline. | [Validation notes](k3s-airgap-gitops-platform/validation.md) · [Runbook](k3s-airgap-gitops-platform/) · [Zarf package](k3s-airgap-gitops-platform/zarf-packages/airgap-web/zarf.yaml) · [Flux manifests](k3s-airgap-gitops-platform/clusters/edge-node/) |
+| Local AI and handoff | **Portable GPU inference** · Built an Arch WSL environment with Ollama, local models up to 24B parameters, and task-specific agents. Also used Tailscale to reach on-site inference. Public artifacts are synthetic examples, not the original distribution. | [WSL portability runbook](local-ai-deployment/wsl-portability.md) · [Container reference and offline checks](local-ai-deployment/) |
+| Operator and developer enablement | **Grizzly Range and GitCI/CD Hero** · Five independent browser training apps, a shared progress view, and 12 graded work orders. GitCI/CD Hero includes 8 tracks and 46 chapters using simulated Git and CI engines. | [Range desktop](https://grizzlyse.com/range/) · [Range design notes](https://grizzlyse.com/portfolio/#range) · [Git engine](gitcicd-hero/js/git.js) · [CI engine](gitcicd-hero/js/ci.js) · [Self-test](gitcicd-hero/tools/selftest.js) |
 
-Built a workplace server running TAK for ATAK/WinTAK alongside self-hosted tools. Docker Compose started Dockge; other services were managed through Dockge. The environment included Starlink, a Cisco router, firewall services, NAS, and Tailscale VPN with MagicDNS for remote access.
+The workplace documentation leaves out private configurations, credentials, and data. The [illustrative Compose file](infrastructure-project/compose.yaml) is a separate local example, not a workplace export. The GrizzWorks extract in this repository contains the shared engine, not the full application. Use sample data in public demos.
 
-Services included Gitea, Pi-hole, Stirling PDF, and Homarr; security tools included Trivy, CrowdSec, Wazuh, and Nessus. CrowdSec helped detect and block suspicious IP addresses.
+## Implementation and release handoff
 
-[Capability map](infrastructure-project/architecture.md) · [Operations checklist](infrastructure-project/operations.md) · [Sanitized Compose example](infrastructure-project/compose.yaml) — a separate local example, not the workplace configuration.
+**[GrizzWorks migration rehearsal](grizzworks-migration/)** — Review a messy CSV before writing a candidate backup, then verify the restore against a disposable GrizzWorks Node server. The recorded fixture run imported four work orders totaling 7.50 estimated hours, preserved the original row, and proposed zero new records on replay. See the [blocked preview](grizzworks-migration/reports/blocked.json) and [lab result](grizzworks-migration/reports/lab-result.json).
 
-### [Local AI deployment](local-ai-deployment/) · Ollama, WSL, GPU inference
+**[Edge Deployment Readiness Kit](edge-readiness/)** — A runnable Python CLI checks target architecture and package checksums before an operator deploys. Compare the [wrong-revision block](edge-readiness/reports/blocked.json) with the [passing staging report](edge-readiness/reports/staged.json). Both reports use synthetic files; the [post-deploy HTTP test](edge-readiness/test_readiness.py) runs against a local test server, not K3s.
 
-Built a portable Arch WSL environment with local models and job-specific agents for low-bandwidth settings. Worked with Qwen, DeepSeek, Mistral, Dolphin, and Gemma models up to 24B parameters, selecting models based on available GPU VRAM. Also used Tailscale for remote access to on-site agents and inference.
+## Supporting work
 
-[Portable WSL runbook](local-ai-deployment/wsl-portability.md) · [Container lab and offline checks](local-ai-deployment/) — reference implementations, not the original distribution or private tools.
+- **[Versioned container delivery](container-delivery/)** — a reference [pipeline](container-delivery/release.yml) builds and tags an image, runs a Trivy scan, and checks the HTTP response. It is not an active deployment workflow.
+- **[Python and SQLite shop reference](shop-operations/)** — balanced ledger entries and repeat-safe event processing. A separate Python example, not the GrizzWorks backend.
+- **[AFT Forge](https://grizzlyse.com/aft-forge/)** — React/TypeScript fitness planner with local data, backup export, and a [Pages build and verification workflow](https://github.com/cec406/grizzlyse/blob/main/.github/workflows/deploy.yml).
+- **[Deployment playbook](https://grizzlyse.com/solutions.html)** — operator discovery, go-live criteria, fallback, and handoff. The worked example is a rollout plan, not a client outcome.
+- **[Python apps and games](https://grizzlyse.com/projects/#python)** — Tkinter and terminal utilities, Python/SQLite, and defensive security tools. See the [games section](https://grizzlyse.com/projects/#games) for Pygame and text adventures.
+- **[Learning apps and simulations](https://grizzlyse.com/projects/#education)** — math, computing and security awareness. The catalog also covers [language practice](https://grizzlyse.com/projects/#languages) and live browser games.
 
-### [GrizzWorks](grizzworks-engine/) · Local-first shop software
+## Repository map
 
-A shop operations app for jobs, invoices, inventory, and maintenance, with a locally hosted mode and browser demo. The shared engine applies business rules across both modes.
+| Repository | Start here |
+| --- | --- |
+| **Projects** (this repo) | Evidence index: project READMEs, reference manifests, runbooks, and focused source samples. |
+| **[grizzlyse](https://github.com/cec406/grizzlyse)** | Source for the public site, portfolio, Pages workflow, and browser apps. |
+| **[applications](https://github.com/cec406/applications)** | Deployable GrizzWorks and Shop Ops source, tests, and packaging. |
+| **[Python-applications](https://github.com/cec406/Python-applications)** | Tkinter utilities, Pygame, and console projects. |
 
-[Try the demo](https://grizzlyse.com/dashboard/) · [Read the engine](grizzworks-engine/shared/erp.js) · [Review the tests](grizzworks-engine/tests/erp.test.js) — this portfolio contains the shared engine, not the full app; use sample data in the public demo.
+For the account landing page, use the canonical [GitHub profile README draft](GITHUB-PROFILE.md). It only becomes the profile README after it is copied to the root of `cec406/cec406`; editing this repository does not change the account profile.
 
-### [GitCI/CD Hero](gitcicd-hero/) · Browser-based technical training
-
-Practice Git and CI/CD without touching a live repository or runner. The browser app simulates Git operations and pipeline execution across 8 tracks and 46 chapters, with 15 Git missions, 10 CI missions, and 21 quizzes.
-
-[Try the live simulator](https://grizzlyse.com/gitcicd/) · [Git engine](gitcicd-hero/js/git.js) · [CI engine](gitcicd-hero/js/ci.js) · [Self-test](gitcicd-hero/tools/selftest.js)
-
-### [Disconnected Kubernetes delivery](k3s-airgap-gitops-platform/) · K3s, Zarf, Flux
-
-A lab for delivering a sample workload without pulling from a public registry at the target site. The offline workload and the GitOps platform are separate examples; a fully disconnected platform requires additional mirroring.
-
-[Offline workload walkthrough](k3s-airgap-gitops-platform/#run-the-offline-workload-demo) · [Flux example](k3s-airgap-gitops-platform/clusters/edge-node/) · [Zarf package](k3s-airgap-gitops-platform/zarf-packages/airgap-web/)
-
-## More to explore
-
-**Delivery and application samples**
-
-- [Versioned container delivery](container-delivery/) — reference build, Trivy scan, and smoke test; see the [pipeline template](container-delivery/release.yml).
-- [Local-first shop operations](shop-operations/) — Python/SQLite reference for balanced ledger entries and repeatable imports.
-
-**Live training and tools** · Built and hosted at [grizzlyse.com](https://grizzlyse.com). The [Range](https://grizzlyse.com/range/) brings five training machines together in a browser-based operator desktop.
-
-- [Cyber Aware](https://grizzlyse.com/range/machine.html?m=csia) — employee cybersecurity course and assessment.
-- [CSMath Hero](https://grizzlyse.com/csmath) — offline math practice from arithmetic through calculus, discrete math, linear algebra, probability, and algorithm analysis.
-- [ZeroDay Academy](https://grizzlyse.com/range/machine.html?m=compsci) — simulated command lines, programming, networking, and authorized security practice.
-- [GRIZZLY_SE Cyber Range](https://grizzlyse.com/range/machine.html?m=gsehack) — beginner security exercises in a game.
-- [CODEWATCH](https://grizzlyse.com/range/machine.html?m=cybercrime) — cybercrime investigation and incident reporting simulation.
-- [SpanishPod](https://grizzlyse.com/spanish) and [RussianPod](https://grizzlyse.com/russian) — language practice with graded lessons and games; SpanishPod uses Latin-American Spanish.
-- [Station Demokratiya](https://grizzlyse.com/stationdemokratiya) — Russian and Spanish typing-defense game.
-- [AFT Forge](https://grizzlyse.com/aft-forge/) — local-first fitness planning app built with React and TypeScript.
-
-## Other repositories
-
-- [Applications](https://github.com/cec406/applications) — shop operations and business applications.
-- [grizzlyse](https://github.com/cec406/grizzlyse) — the live website, training apps, games, and language tools.
-- [Cyber](https://github.com/cec406/Cyber) — security utilities and educational examples.
-- [Python applications](https://github.com/cec406/Python-applications) — Python utilities and games.
-
-Project READMEs distinguish original code and workplace experience from reference implementations and synthetic examples.
+**Recruiting:** [Email Caleb](mailto:info@grizzlyse.com?subject=Recruiting%20inquiry%20for%20Caleb%20Clark) · [LinkedIn](https://www.linkedin.com/in/caleb-clark-4a638b28b/) · [GitHub profile](https://github.com/cec406)

@@ -1,0 +1,15 @@
+{
+  "meta": {"version": 2},
+  "settings": {"shopName": "Migration Lab (fictional)", "profile": "mixed"},
+  "customers": [
+    {"id": "cus-lab-north", "name": "North Fork Fabrication"},
+    {"id": "cus-lab-river", "name": "River Bend Supply"}
+  ],
+  "jobs": [
+    {"id": "job-lab-north", "customerId": "cus-lab-north", "title": "November service", "status": "Active"},
+    {"id": "job-lab-river", "customerId": "cus-lab-river", "title": "November service", "status": "Active"}
+  ],
+  "workorders": [
+    {"id": "wo-lab-existing", "title": "Inspect shop lift", "status": "Scheduled", "priority": "Normal", "due": "2026-12-03", "estHours": 1, "type": "Inspection"}
+  ]
+}

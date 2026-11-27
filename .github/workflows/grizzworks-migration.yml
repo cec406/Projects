@@ -1,0 +1,23 @@
+name: GrizzWorks migration checks
+
+on:
+  push:
+    paths: ['grizzworks-migration/**', '.github/workflows/grizzworks-migration.yml']
+  pull_request:
+    paths: ['grizzworks-migration/**', '.github/workflows/grizzworks-migration.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: grizzworks-migration
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -B -m unittest -v

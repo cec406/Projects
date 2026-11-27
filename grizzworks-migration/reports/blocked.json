@@ -1,0 +1,44 @@
+{
+  "status": "BLOCKED",
+  "approval_sha256": "c5529d79c605e66ec24b0cce6be616acfbcef08d66a3a8a4f027ee167409cbb9",
+  "source_rows": 5,
+  "baseline_workorders": 1,
+  "new": {
+    "records": 1,
+    "estimated_hours": "2.25"
+  },
+  "already_present": {
+    "records": 0,
+    "estimated_hours": "0.00"
+  },
+  "accepted": {
+    "records": 1,
+    "estimated_hours": "2.25"
+  },
+  "rejected": [
+    {
+      "line": 3,
+      "legacy_id": "L-102",
+      "reason": "due date must be YYYY-MM-DD; ambiguous dates are not inferred"
+    },
+    {
+      "line": 4,
+      "legacy_id": "L-103",
+      "reason": "customer must match exactly one backup record"
+    },
+    {
+      "line": 5,
+      "legacy_id": "L-104",
+      "reason": "duplicate legacy ID; resolve all duplicates in the source"
+    },
+    {
+      "line": 6,
+      "legacy_id": "l-104",
+      "reason": "duplicate legacy ID; resolve all duplicates in the source"
+    }
+  ],
+  "planned_order_ids": [
+    "wo-migration-l-101"
+  ],
+  "matched_order_ids": []
+}

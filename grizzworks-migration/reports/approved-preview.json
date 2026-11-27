@@ -1,0 +1,26 @@
+{
+  "status": "READY_FOR_APPROVAL",
+  "approval_sha256": "c8e5063615e889efa0645515234d624224bd89f5644c73ab7f024455f075a9eb",
+  "source_rows": 4,
+  "baseline_workorders": 1,
+  "new": {
+    "records": 4,
+    "estimated_hours": "7.50"
+  },
+  "already_present": {
+    "records": 0,
+    "estimated_hours": "0.00"
+  },
+  "accepted": {
+    "records": 4,
+    "estimated_hours": "7.50"
+  },
+  "rejected": [],
+  "planned_order_ids": [
+    "wo-migration-l-101",
+    "wo-migration-l-102",
+    "wo-migration-l-103",
+    "wo-migration-l-104"
+  ],
+  "matched_order_ids": []
+}

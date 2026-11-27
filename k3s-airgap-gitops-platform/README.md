@@ -8,7 +8,7 @@ This lab shows how to deliver an application to a remote commercial site that ca
 - [Flux reconciliation](clusters/edge-node/infrastructure-kustomization.yaml) — inspect how the example GitOps platform points at infrastructure manifests.
 - [Platform manifests](infrastructure/) — review sample services and network policy; these are not included in the offline workload package.
 
-This is a reference lab, not a claim that the entire platform is already packaged or deployed in a disconnected environment.
+This is a reference lab, not a claim that the entire platform is already packaged or deployed in a disconnected environment. See the [validation notes](validation.md) for the prior workload result and how to capture a repeat run.
 
 ## Run the offline workload demo
 

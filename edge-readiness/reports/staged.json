@@ -1,0 +1,22 @@
+{
+  "release": "airgap-web-synthetic-0.1.0",
+  "status": "STAGING_PASSED",
+  "health": "not requested",
+  "checks": [
+    {
+      "name": "target architecture",
+      "passed": true,
+      "detail": "Manifest: amd64; target: amd64."
+    },
+    {
+      "name": "airgap-web.fixture",
+      "passed": true,
+      "detail": "SHA-256 matches: 4b9e30060788b5182f0051114854ea336ad9ca6b0677ab3ef9bb0fae24470f3b."
+    },
+    {
+      "name": "zarf-init.fixture",
+      "passed": true,
+      "detail": "SHA-256 matches: dd6267ecf7875597d24aa48bca66b75b92c3c29231d8241962514c4e737123b8."
+    }
+  ]
+}
